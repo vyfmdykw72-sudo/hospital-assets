@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Hallway Tour</title>
+    <link rel="stylesheet" href="https://jsdelivr.net"/>
+    <script type="text/javascript" src="https://jsdelivr.net"></script>
+    <style>
+        html, body, #panorama { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background: #000; }
+    </style>
+</head>
+<body>
+    <div id="panorama"></div>
+    <script>
+        pannellum.viewer('panorama', {
+            "type": "equirectangular",
+            "panorama": "https://githack.com",
+            "autoLoad": true,
+            "compass": false,
+            "hfov": 110
+        });
+    </script>
+</body>
+</html>
