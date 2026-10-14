@@ -83,7 +83,7 @@
             }
         });
 
-        function startTour() {
+               function startTour() {
             // 1. Immediately hide the intro screen elements
             const overlay = document.getElementById('intro-overlay');
             if (overlay) {
@@ -93,11 +93,14 @@
                 }, 1500);
             }
 
-            // 2. Safely initialize Pannellum 
+            // 2. Safely initialize Pannellum with an absolute fallback address
             try {
                 pannellum.viewer('panorama', {
                     "type": "base",
-                    "panorama": "/hospital-assets/scary_hospital_hallway.219.jpg",
+                    
+                    /* 👇 FORCES SYSTEM TO ACCESS THE TRUE LIVE ASSET LINK DIRECTLY */
+                    "panorama": "https://github.io",
+                    
                     "autoLoad": true,
                     "autoRotate": -1.5,
                     "compass": false,
@@ -113,6 +116,7 @@
                 console.log("Pannellum initialization safely handled:", error);
             }
         }
+
     </script>
 
 </body>
