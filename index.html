@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scary Hospital Hallway 3D Tour</title>
     
-<!-- Completely local hosting. No external security blocks! -->
-<link rel="stylesheet" href="./pannellum.css"/>
-<script type="text/javascript" src="./pannellum.js"></script>
-
+    <!-- Verified Local Hosting Engine Links -->
+    <link rel="stylesheet" href="./pannellum.css"/>
+    <script type="text/javascript" src="./pannellum.js"></script>
 
     <style>
         * {
             margin: 0;
             padding: 0;
-            box-box-sizing: border-box;
+            box-sizing: border-box;
         }
         html, body, #panorama {
             width: 100%;
@@ -73,11 +72,11 @@
         <button id="enter-btn" onclick="startTour()">ENTER TOUR</button>
     </div>
 
-            <!-- The 3D Panorama Container -->
+    <!-- The 3D Panorama Container -->
     <div id="panorama"></div>
 
     <script>
-        // Global error safeguard for Safari browser engine bugs
+        // Suppress benign Safari motion-sensor rejection logs
         window.addEventListener('unhandledrejection', function(event) {
             if (event.reason && event.reason.message && event.reason.message.includes('Not implemented')) {
                 event.preventDefault();
@@ -85,7 +84,7 @@
         });
 
         function startTour() {
-            // 1. Immediately trigger the fade out animation for the screen overlay
+            // 1. Immediately hide the splash cover screen
             const overlay = document.getElementById('intro-overlay');
             if (overlay) {
                 overlay.style.opacity = 0;
@@ -94,22 +93,22 @@
                 }, 1500);
             }
 
-            // 2. FIXED DYNAMIC PATH CONCATENATION
-            // Grabs the exact active page directory cleanly as standard text
+            // 2. BULLETPROOF IMAGE PATH STRIPPER
+            // Reads the browser bar, cleanly strips 'index.html', and binds the panorama name
             const currentURL = window.location.href;
-            const basePath = currentURL.substring(0, currentURL.lastIndexOf('/') + 1);
-            const cleanImagePath = basePath + "scary_hospital_hallway.jpg";
+            const cleanDir = currentURL.substring(0, currentURL.lastIndexOf('/') + 1);
+            const cleanImagePath = cleanDir + "scary_hospital_hallway.jpg";
 
-            // 3. Initialize Pannellum 3D Player Environment
+            // 3. Fire up the Pannellum 3D render environment
             try {
                 pannellum.viewer('panorama', {
                     "type": "base",
-                    "panorama": cleanImagePath, // 👈 Successfully receives the clean text URL path
+                    "panorama": cleanImagePath, 
                     "autoLoad": true,
-                    "autoRotate": -1.5,
+                    "autoRotate": -1.5, // Slow eerie rotation loop
                     "compass": false,
                     "showControls": true,
-                    "hfov": 100,
+                    "hfov": 100, 
                     "minHfov": 50,
                     "maxHfov": 120,
                     "orientationChangeRequired": false, 
