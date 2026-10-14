@@ -90,22 +90,26 @@
                 }
             });
 
-            // 2. SAFE VIEWER INITIALIZATION WITH WEBGL CACHE SAFETY
-            try {
-                pannellum.viewer('panorama', {
-                    "type": "base",
-                    "panorama": "./scary_hospital_hallway.219.jpg",
-                    "autoLoad": true,
-                    "autoRotate": -1.5,
-                    "compass": false,
-                    "showControls": true,
-                    "hfov": 100,
-                    "minHfov": 50,
-                    "maxHfov": 120,
-                    "orientationChangeRequired": false, 
-                    "deviceOrientation": false,
-                    "multiResMinHfov": 50 // Prevents older Safari engines from overloading WebGL canvas bounds
-                });
+            // Initialize the Pannellum 3D Viewer
+pannellum.viewer('panorama', {
+    "type": "base",
+    
+    /* 👇 1. FORCE THE PATH FROM THE BASE WEBSITE FOLDER */
+    "panorama": "/hospital-assets/scary_hospital_hallway.219.jpg",
+    
+    "autoLoad": true,
+    "autoRotate": -1.5,
+    "compass": false,
+    "showControls": true,
+    "hfov": 100,
+    "minHfov": 50,
+    "maxHfov": 120,
+    "orientationChangeRequired": false, 
+    "deviceOrientation": false,
+    
+    /* 👇 2. DISABLE CORS SECURITY HEADERS INDEPENDENTLY FOR LOCAL HOSTING */
+    "crossOrigin": "anonymous" 
+});
             } catch (e) {
                 console.log("Pannellum initialization caught safely:", e);
             }
