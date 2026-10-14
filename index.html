@@ -1,27 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Hallway Tour</title>
-    <!-- Fixed absolute paths to the Pannellum 3D engine -->
+    <title>Scary Hospital Hallway 3D Tour</title>
+    
+    <!-- Pannellum CSS & JS from CDN -->
     <link rel="stylesheet" href="https://jsdelivr.net"/>
     <script type="text/javascript" src="https://jsdelivr.net"></script>
+
     <style>
-        html, body, #panorama { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background: #000; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-box-sizing: border-box;
+        }
+        html, body, #panorama {
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        /* Spooky Intro Overlay */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #1a0505 0%, #000000 100%);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #8b0000;
+            text-align: center;
+            transition: opacity 1.5s ease;
+        }
+        #intro-overlay h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.7);
+        }
+        #enter-btn {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #8b0000;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px rgba(139, 0, 0, 0.5);
+        }
+        #enter-btn:hover {
+            background-color: #8b0000;
+            box-shadow: 0 0 20px #8b0000;
+            color: black;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Spooky Splash Screen -->
+    <div id="intro-overlay">
+        <h1>STAY OUT OF THE HALLWAY</h1>
+        <button id="enter-btn" onclick="startTour()">ENTER TOUR</button>
+    </div>
+
+    <!-- The 3D Panorama Container -->
     <div id="panorama"></div>
+
     <script>
-        pannellum.viewer('panorama', {
-            "type": "equirectangular",
-            "panorama": "https://githack.com",
-            "crossOrigin": "anonymous",
-            "autoLoad": true,
-            "compass": false,
-            "hfov": 110
-        });
+        function startTour() {
+            // Fade out the spooky intro overlay
+            const overlay = document.getElementById('intro-overlay');
+            overlay.style.opacity = 0;
+            setTimeout(() => overlay.style.display = 'none', 1500);
+
+            // OPTIONAL: If you have scary ambient audio, uncomment below
+            // let audio = new Audio('your-scary-audio.mp3');
+            // audio.loop = true;
+            // audio.play();
+
+            // Initialize the Pannellum 3D Viewer
+            pannellum.viewer('panorama', {
+                "type": "base",
+                "panorama": "https://unsplash.com", // REPLACE WITH YOUR SPOOKY IMAGE URL
+                "autoLoad": true,
+                "autoRotate": -1.5, // Slow eerie rotation
+                "compass": false,
+                "showControls": true,
+                "hfov": 100, // Field of view
+                "minHfov": 50,
+                "maxHfov": 120
+            });
+        }
     </script>
+
 </body>
 </html>
