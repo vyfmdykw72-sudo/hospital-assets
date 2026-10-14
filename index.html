@@ -83,7 +83,7 @@
             }
         });
 
-        function startTour() {
+                function startTour() {
             // 1. Immediately hide the splash cover screen
             const overlay = document.getElementById('intro-overlay');
             if (overlay) {
@@ -93,31 +93,42 @@
                 }, 1500);
             }
 
-            // 2. BULLETPROOF IMAGE PATH STRIPPER
-            // Reads the browser bar, cleanly strips 'index.html', and binds the panorama name
+            // 2. BULLETPROOF IMAGE & AUDIO PATH STRIPPER
             const currentURL = window.location.href;
             const cleanDir = currentURL.substring(0, currentURL.lastIndexOf('/') + 1);
             const cleanImagePath = cleanDir + "scary_hospital_hallway.jpg";
+            const cleanAudioPath = cleanDir + "ambient_horror.mp3"; // 👈 Generates the path for your audio file
 
-            // 3. Fire up the Pannellum 3D render environment
+            // 3. TRIGGER SPOOKY AMBIENT AUDIO LOOP
+            try {
+                const horrorAudio = new Audio(cleanAudioPath);
+                horrorAudio.loop = true; // Loops the sound infinitely
+                horrorAudio.volume = 0.5; // Sets volume to 50% so it doesn't blast ears
+                horrorAudio.play();
+            } catch (audioError) {
+                console.log("Audio playback block prevented:", audioError);
+            }
+
+            // 4. Fire up the Pannellum 3D render environment
             try {
                 pannellum.viewer('panorama', {
-                    "type": "equirectangular",
+                    "type": "base",
                     "panorama": cleanImagePath, 
                     "autoLoad": true,
-                    "autoRotate": -1.5, // Slow eerie rotation loop
+                    "autoRotate": -1.5,
                     "compass": false,
                     "showControls": true,
                     "hfov": 100, 
                     "minHfov": 50,
                     "maxHfov": 120,
                     "orientationChangeRequired": false, 
-                    "deviceOrientation": false,
+                    "deviceOrientation": false
                 });
             } catch (error) {
                 console.log("Pannellum initialization safely handled:", error);
             }
         }
+        
     </script>
 
 </body>
