@@ -72,19 +72,19 @@
         <button id="enter-btn" onclick="startTour()">ENTER TOUR</button>
     </div>
 
-        <!-- The 3D Panorama Container -->
+            <!-- The 3D Panorama Container -->
     <div id="panorama"></div>
 
     <script>
-        // Global error suppression for rogue Safari/Extension issues
+        // Global error safeguard for Safari browser engine bugs
         window.addEventListener('unhandledrejection', function(event) {
             if (event.reason && event.reason.message && event.reason.message.includes('Not implemented')) {
                 event.preventDefault();
             }
         });
 
-                      function startTour() {
-            // 1. Immediately hide the intro screen elements
+        function startTour() {
+            // 1. Immediately trigger the fade out animation for the screen overlay
             const overlay = document.getElementById('intro-overlay');
             if (overlay) {
                 overlay.style.opacity = 0;
@@ -93,16 +93,17 @@
                 }, 1500);
             }
 
-            // 2. DYNAMIC PATH RESOLUTION
-            // Automatically determines if you are on github.io/hospital-assets/ and grabs the image safely
-            const absoluteBase = window.location.href.split('index.html')[0];
-            const cleanImagePath = absoluteBase.replace(/\/$/, "") + "/scary_hospital_hallway.jpg";
+            // 2. FIXED DYNAMIC PATH CONCATENATION
+            // Grabs the exact active page directory cleanly as standard text
+            const currentURL = window.location.href;
+            const basePath = currentURL.substring(0, currentURL.lastIndexOf('/') + 1);
+            const cleanImagePath = basePath + "scary_hospital_hallway.jpg";
 
-            // 3. Initialize Pannellum safely
+            // 3. Initialize Pannellum 3D Player Environment
             try {
                 pannellum.viewer('panorama', {
                     "type": "base",
-                    "panorama": cleanImagePath, // 👈 Uses the dynamic self-correcting path
+                    "panorama": cleanImagePath, // 👈 Successfully receives the clean text URL path
                     "autoLoad": true,
                     "autoRotate": -1.5,
                     "compass": false,
@@ -118,8 +119,6 @@
                 console.log("Pannellum initialization safely handled:", error);
             }
         }
-
-
     </script>
 
 </body>
