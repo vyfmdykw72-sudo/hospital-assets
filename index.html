@@ -98,6 +98,11 @@
                 "hfov": 100, // Field of view
                 "minHfov": 50,
                 "maxHfov": 120
+
+                /* 👇 ADD THESE 3 LINES TO FIX THE SAFARI / PLATFORM ERROR */
+    "orientationChangeRequired": false, 
+    "deviceOrientation": false,
+    "fallback": "https://github.io"
             });
         }
     </script>
