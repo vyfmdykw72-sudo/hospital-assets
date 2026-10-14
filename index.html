@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Hallway Tour</title>
+    <!-- Fixed absolute paths to the Pannellum 3D engine -->
     <link rel="stylesheet" href="https://jsdelivr.net"/>
     <script type="text/javascript" src="https://jsdelivr.net"></script>
     <style>
@@ -16,6 +17,7 @@
         pannellum.viewer('panorama', {
             "type": "equirectangular",
             "panorama": "https://githack.com",
+            "crossOrigin": "anonymous",
             "autoLoad": true,
             "compass": false,
             "hfov": 110
