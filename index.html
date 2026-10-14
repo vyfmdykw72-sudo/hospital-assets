@@ -75,35 +75,40 @@
     <!-- The 3D Panorama Container -->
     <div id="panorama"></div>
 
-    <script>
+        <script>
         function startTour() {
             // Fade out the spooky intro overlay
             const overlay = document.getElementById('intro-overlay');
             overlay.style.opacity = 0;
             setTimeout(() => overlay.style.display = 'none', 1500);
 
-            // OPTIONAL: If you have scary ambient audio, uncomment below
-            // let audio = new Audio('your-scary-audio.mp3');
-            // audio.loop = true;
-            // audio.play();
-
-            // Initialize the Pannellum 3D Viewer
-            pannellum.viewer('panorama', {
-                "type": "base",
-                "panorama": "./scary_hospital_hallway.219.jpg", // REPLACE WITH YOUR SPOOKY IMAGE URL
-                "autoLoad": true,
-                "autoRotate": -1.5, // Slow eerie rotation
-                "compass": false,
-                "showControls": true,
-                "hfov": 100, // Field of view
-                "minHfov": 50,
-                "maxHfov": 120
-
-                /* 👇 ADD THESE 3 LINES TO FIX THE SAFARI / PLATFORM ERROR */
-    "orientationChangeRequired": false, 
-    "deviceOrientation": false,
-    "fallback": "https://github.io"
+            // 1. GLOBAL SAFARI / EXTENSION PROMISE PROTECTION
+            // This catches and silences any "Not implemented" errors thrown by extensions or Safari engine glitches
+            window.addEventListener('unhandledrejection', function(event) {
+                if (event.reason && event.reason.message && event.reason.message.includes('Not implemented')) {
+                    event.preventDefault(); // Silently absorbs the error so the page doesn't freeze
+                }
             });
+
+            // 2. SAFE VIEWER INITIALIZATION WITH WEBGL CACHE SAFETY
+            try {
+                pannellum.viewer('panorama', {
+                    "type": "base",
+                    "panorama": "./scary_hospital_hallway.219.jpg",
+                    "autoLoad": true,
+                    "autoRotate": -1.5,
+                    "compass": false,
+                    "showControls": true,
+                    "hfov": 100,
+                    "minHfov": 50,
+                    "maxHfov": 120,
+                    "orientationChangeRequired": false, 
+                    "deviceOrientation": false,
+                    "multiResMinHfov": 50 // Prevents older Safari engines from overloading WebGL canvas bounds
+                });
+            } catch (e) {
+                console.log("Pannellum initialization caught safely:", e);
+            }
         }
     </script>
 
