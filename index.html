@@ -72,46 +72,48 @@
         <button id="enter-btn" onclick="startTour()">ENTER TOUR</button>
     </div>
 
-    <!-- The 3D Panorama Container -->
+        <!-- The 3D Panorama Container -->
     <div id="panorama"></div>
 
-        <script>
+    <script>
+        // Global error suppression for rogue Safari/Extension issues
+        window.addEventListener('unhandledrejection', function(event) {
+            if (event.reason && event.reason.message && event.reason.message.includes('Not implemented')) {
+                event.preventDefault();
+            }
+        });
+
         function startTour() {
-            // Fade out the spooky intro overlay
+            // 1. Immediately hide the intro screen elements
             const overlay = document.getElementById('intro-overlay');
-            overlay.style.opacity = 0;
-            setTimeout(() => overlay.style.display = 'none', 1500);
+            if (overlay) {
+                overlay.style.opacity = 0;
+                setTimeout(function() { 
+                    overlay.style.display = 'none'; 
+                }, 1500);
+            }
 
-            // 1. GLOBAL SAFARI / EXTENSION PROMISE PROTECTION
-            // This catches and silences any "Not implemented" errors thrown by extensions or Safari engine glitches
-            window.addEventListener('unhandledrejection', function(event) {
-                if (event.reason && event.reason.message && event.reason.message.includes('Not implemented')) {
-                    event.preventDefault(); // Silently absorbs the error so the page doesn't freeze
-                }
-            });
-
-            // Initialize the Pannellum 3D Viewer
-pannellum.viewer('panorama', {
-    "type": "base",
-    
-    /* 👇 1. FORCE THE PATH FROM THE BASE WEBSITE FOLDER */
-    "panorama": "/hospital-assets/scary_hospital_hallway.219.jpg",
-    
-    "autoLoad": true,
-    "autoRotate": -1.5,
-    "compass": false,
-    "showControls": true,
-    "hfov": 100,
-    "minHfov": 50,
-    "maxHfov": 120,
+            // 2. Safely initialize Pannellum 
+            try {
+                pannellum.viewer('panorama', {
+                    "type": "base",
+                    "panorama": "/hospital-assets/scary_hospital_hallway.219.jpg",
+                    "autoLoad": true,
+                    "autoRotate": -1.5,
+                    "compass": false,
+                    "showControls": true,
+                    "hfov": 100,
+                    "minHfov": 50,
+                    "maxHfov": 120,
                     "orientationChangeRequired": false, 
                     "deviceOrientation": false,
-                    "crossOrigin": "anonymous" 
+                    "crossOrigin": "anonymous"
                 });
-            } catch (e) {
-                console.log("Pannellum initialization caught safely:", e);
+            } catch (error) {
+                console.log("Pannellum initialization safely handled:", error);
             }
         }
     </script>
+
 </body>
 </html>
