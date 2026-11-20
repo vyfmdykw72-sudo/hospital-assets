@@ -78,7 +78,7 @@
   box-shadow:none;transition:filter .2s ease,transform .2s ease;
 }
 .pnlm-hotspot-base.fward-hotspot.walk-marker.floor-back:after{
-  transform:perspective(90px) rotateX(55deg) rotate(225deg);
+  transform:perspective(90px) rotateX(55deg) rotate(45deg);
 }
 .pnlm-hotspot-base.fward-hotspot.walk-marker:hover,
 .pnlm-hotspot-base.fward-hotspot.walk-marker:focus-visible{
@@ -110,6 +110,10 @@
 .admin-stamp{margin-top:50px;color:#aaa08c;letter-spacing:.1em}
 .admin-footer{display:flex;justify-content:space-between;gap:15px;padding:18px clamp(22px,6vw,85px);border-top:1px solid #68695d;font:10px 'Courier New',monospace;letter-spacing:.1em;color:#b1b1a4}
 @media(max-width:680px){.admin-cols{grid-template-columns:1fr}.admin-header{align-items:flex-start;flex-direction:column}.admin-footer{flex-direction:column}}
+
+/* Exit marker: separate from the floor navigation arrows */
+.pnlm-hotspot-base.fward-hotspot.exit-marker{width:38px;height:38px;margin:-19px 0 0 -19px;border:1px solid #d5b987;border-radius:50%;background:rgba(42,33,22,.6);box-shadow:0 0 15px rgba(228,188,117,.45)}
+.pnlm-hotspot-base.fward-hotspot.exit-marker:after{content:'↩';font:25px/1 Arial;color:#f0d6a5;background:none;box-shadow:none;width:auto;height:auto}
 </style>
 </head>
 <body>
@@ -120,7 +124,7 @@
 <p>Choose a marker, then click its exact location in the panorama. Click again to reposition it. Each camera has its own markers.</p>
 <label for="cal-kind">Marker to place</label>
 <select id="cal-kind">
-<option value="forward">↑ Walk to next camera</option>
+<option value="exit">Exit Hospital · C1 entrance</option><option value="forward">↑ Walk to next camera</option>
 <option value="back">↑ Walk toward entrance</option>
 <option value="about">Administration · Door 01</option>
 <option value="treatment">Treatment · Door 02</option>
@@ -188,13 +192,14 @@ const MARKER_META={
  archive:{label:'Records Archive · Room 03',kind:'standard'},
  records:{label:'Patient Records · Room 04',kind:'standard'},
  storage:{label:'Artifact Storage · Room 05',kind:'standard'},
- restricted:{label:'Restricted Area',kind:'restricted'}
+ restricted:{label:'Restricted Area',kind:'restricted'},
+ exit:{label:'Exit Hospital',kind:'exit-marker'}
 };
 const STORAGE_KEY='fward-prototype05-v1';
-let markerData={"c1":{"forward":{"pitch":-25.169756764171364,"yaw":-177.6412052466166},"treatment":{"pitch":-2.945607366951624,"yaw":123.70897469390417},"about":{"pitch":-2.8665060632244757,"yaw":-148.47997856478102}},"c2":{"forward":{"pitch":-13.370699257322375,"yaw":-177.6964328974311},"back":{"pitch":-22.972173437313145,"yaw":2.8101846853945434},"treatment":{"pitch":-3.3969363208681793,"yaw":58.083882724912755},"about":{"pitch":-2.592683636934125,"yaw":-108.73979444002026},"archive":{"pitch":-0.9390499410449776,"yaw":-167.28885019552644},"records":{"pitch":-1.0620692379347787,"yaw":166.39948795738684}},"c3":{"back":{"pitch":-19.362962800066125,"yaw":2.4597852751512868},"records":{"pitch":-3.843635461871816,"yaw":124.51431516897189},"archive":{"pitch":-2.2097178064430434,"yaw":-148.91556873242158},"treatment":{"pitch":-1.0323254599886558,"yaw":15.715778110819969},"about":{"pitch":-2.3386202413028774,"yaw":-19.053884934629313}}},calibrating=false,clickStart=null;
+let markerData={"c1":{"exit":{"pitch":-18,"yaw":2.8},"forward":{"pitch":-25.169756764171364,"yaw":-177.6412052466166},"treatment":{"pitch":-2.945607366951624,"yaw":123.70897469390417},"about":{"pitch":-2.8665060632244757,"yaw":-148.47997856478102}},"c2":{"forward":{"pitch":-13.370699257322375,"yaw":-177.6964328974311},"back":{"pitch":-22.972173437313145,"yaw":2.8101846853945434},"treatment":{"pitch":-3.3969363208681793,"yaw":58.083882724912755},"about":{"pitch":-2.592683636934125,"yaw":-108.73979444002026},"archive":{"pitch":-0.9390499410449776,"yaw":-167.28885019552644},"records":{"pitch":-1.0620692379347787,"yaw":166.39948795738684}},"c3":{"back":{"pitch":-19.362962800066125,"yaw":2.4597852751512868},"records":{"pitch":-3.843635461871816,"yaw":124.51431516897189},"archive":{"pitch":-2.2097178064430434,"yaw":-148.91556873242158},"treatment":{"pitch":-1.0323254599886558,"yaw":15.715778110819969},"about":{"pitch":-2.3386202413028774,"yaw":-19.053884934629313}}},calibrating=false,clickStart=null;
 try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));if(saved&&typeof saved==='object')for(const id of Object.keys(PANORAMAS))markerData[id]=saved[id]||{}}catch(e){}
 function saveMarkers(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(markerData))}catch(e){console.warn('Storage unavailable',e)}}
-function sceneHotspots(id){return Object.entries(markerData[id]||{}).filter(([key,pos])=>MARKER_META[key]&&Number.isFinite(pos.pitch)&&Number.isFinite(pos.yaw)&&((key!=='forward'||WALK[id].forward)&&(key!=='back'||WALK[id].back))).map(([key,pos])=>makeHotspot(id,key,pos))}
+function sceneHotspots(id){return Object.entries(markerData[id]||{}).filter(([key,pos])=>MARKER_META[key]&&Number.isFinite(pos.pitch)&&Number.isFinite(pos.yaw)&&((key!=='forward'||WALK[id].forward)&&(key!=='back'||WALK[id].back)&&(key!=='exit'||id==='c1'))).map(([key,pos])=>makeHotspot(id,key,pos))}
 function makeHotspot(id,key,pos){
  const meta=MARKER_META[key];
  return {id:'mark-'+id+'-'+key,pitch:pos.pitch,yaw:pos.yaw,createTooltipFunc:createPlacedMarker,createTooltipArgs:{key,label:meta.label,kind:meta.kind}};
@@ -203,7 +208,7 @@ function createPlacedMarker(div,args){
  div.classList.add('fward-hotspot',args.kind);if(args.key==='back')div.classList.add('floor-back');
  div.dataset.label=args.label;
  div.setAttribute('role','button');div.tabIndex=0;div.setAttribute('aria-label',args.label);
- const run=()=>{if(calibrating)return;if(args.key==='forward'||args.key==='back'){const next=WALK[sceneId][args.key];if(next)walkTo(next)}else if(args.key==='about')openAdministration();else if(args.key==='records')openModal(RECORDS,'PATIENT RECORDS / ARCHIVE');else if(PAGES[args.key])openModal([PAGES[args.key]],'DEPARTMENT / PREVIEW');else openModal([{number:'DEPARTMENT PREVIEW',name:args.label.toUpperCase(),photo:'COMING SOON',copy:'This department will be connected to its final experience later.'}],'DEPARTMENT / PREVIEW')};
+ const run=()=>{if(calibrating)return;if(args.key==='forward'||args.key==='back'){const next=WALK[sceneId][args.key];if(next)walkTo(next)}else if(args.key==='exit')exitTour();else if(args.key==='about')openAdministration();else if(args.key==='records')openModal(RECORDS,'PATIENT RECORDS / ARCHIVE');else if(PAGES[args.key])openModal([PAGES[args.key]],'DEPARTMENT / PREVIEW');else openModal([{number:'DEPARTMENT PREVIEW',name:args.label.toUpperCase(),photo:'COMING SOON',copy:'This department will be connected to its final experience later.'}],'DEPARTMENT / PREVIEW')};
  div.addEventListener('click',e=>{e.stopPropagation();run()});
  div.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();run()}});
 }
@@ -286,7 +291,7 @@ $('panorama').addEventListener('click',e=>{
  if(!calibrating||moving||!clickStart||Math.hypot(e.clientX-clickStart.x,e.clientY-clickStart.y)>7)return;
  if(e.target.closest('.pnlm-hotspot-base')||e.target.closest('button'))return;
  const key=$('cal-kind').value;
- if((key==='forward'&&!WALK[sceneId].forward)||(key==='back'&&!WALK[sceneId].back)){
+ if((key==='exit'&&sceneId!=='c1')||(key==='forward'&&!WALK[sceneId].forward)||(key==='back'&&!WALK[sceneId].back)){
   $('cal-message').textContent='That direction has no adjacent camera at '+sceneId.toUpperCase();return;
  }
  const coords=viewer.mouseEventToCoords(e);
