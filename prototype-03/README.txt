@@ -1,10 +1,15 @@
-THE F WARD — PROTOTYPE 03
+THE F WARD — PROTOTYPE 03 · DEMO FIX
 
-Upload the CONTENTS of this ZIP to a new prototype-03 folder in your GitHub Pages repository.
-Open https://vyfmdykw72-sudo.github.io/hospital-assets/prototype-03/
+This version removes all uncalibrated spherical hotspots from the hallway.
+Use fixed Forward / Back buttons to navigate C1 → C2 → C3 and back.
+Use Departments menu to open Prototype 02's interactive file previews.
+The original door-marker coordinates were not appropriate for the new panoramas.
+Future version: calibrate each door per camera scene and place markers accurately.
 
-Enter hospital, click the glowing forward arrow to walk C1 > C2 > C3. Turn around to use the back arrow and return. A short zoom, dark dissolve, and scene crossfade connect the real panoramas.
+TO UPLOAD:
+Open your hospital-assets GitHub repository. Navigate into prototype-03.
+Upload all files from this ZIP to that folder and commit, replacing existing files.
+You can also create prototype-03-demo as a separate folder if preferred.
+If the old version appears, hard-refresh or open in a private window.
 
-Patient Records and other Prototype 02 overlays are retained as temporary demonstration markers at C2. These marker positions are NOT yet calibrated to doors.
-
-For this test, the forward panorama heading is yaw +90 and back is -90. If this orientation differs from the KeyShot scene, adjust the yaw values in sceneHotspots() in index.html. The transition approximates movement between still images, rather than rendering continuous 3D motion.
+NOTE: This is a reliable demo layout, NOT finished door interaction.
